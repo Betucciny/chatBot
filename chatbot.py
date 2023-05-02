@@ -7,6 +7,8 @@ import tensorflow as tf
 from data_utils import tokenize, parse_dialogs_per_response
 from memory_network import MemoryNetwork
 
+import pickle
+
 
 def vectorize_candidates(candidates, word_idx, sentence_size):
     # Determine shape of final vector
@@ -211,7 +213,7 @@ class ChatBotWrapper(object):
             turn_count += 1
 
 
-if __name__ == "__main__":
+def main():
     candidates = []
     candidates_to_idx = {}
     with open('dialog-babi/dialog-babi-candidates.txt') as f:
@@ -228,7 +230,7 @@ if __name__ == "__main__":
     with open('dialog-babi/dialog-babi-task5-full-dialogs-tst.txt') as f:
         test_data = parse_dialogs_per_response(f.readlines(), candidates_to_idx)
 
-    val_data = [] 
+    val_data = []
     with open('dialog-babi/dialog-babi-task5-full-dialogs-dev.txt') as f:
         val_data = parse_dialogs_per_response(f.readlines(), candidates_to_idx)
 
@@ -243,4 +245,10 @@ if __name__ == "__main__":
                              embedding_size=50)
     chatbot.train()
     chatbot.test()
-    chatbot.interactive_mode()
+    # chatbot.interactive_mode()
+    with open("chatbot.pickle", "wb") as archivo:
+        pickle.dump(chatbot, archivo)
+
+
+if __name__ == "__main__":
+    main()
